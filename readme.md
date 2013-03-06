@@ -1,7 +1,7 @@
-AJAX Chat Standalone
+AJAX Chat
 =========
 
-This is the standalone version of Blueimp's AJAX Chat. If you are looking for a version to integrate with your forum, select a different branch.
+This is the Beehive Forum integration version of Blueimp's AJAX Chat.
 
 AJAX stands for "Asynchronous JavaScript and XML".
 The AJAX Chat clients (the user browsers) use JavaScript to query the web server for updates.
@@ -13,8 +13,8 @@ Requirements
 ============
 
 ###Server-Side:
-- PHP >= 4
-- MySQL >= 4
+- PHP >= 5.2.1
+- MySQL >= 5.1.41
 - Ruby >= 1.8 (optional)
 
 ###Client-Side:

@@ -675,7 +675,6 @@ var ajaxChat = {
 						case '/channelEnter':
 							this.playSound(this.settings['soundEnter']);
 							break;
-						case '/logout':
 						case '/channelLeave':
 						case '/kick':
 							this.playSound(this.settings['soundLeave']);
@@ -907,9 +906,6 @@ var ajaxChat = {
 			case 'userRole':
 				this.userRole = infoData;
 				break;				
-			case 'logout':
-				this.handleLogout(infoData);
-				return;
 			case 'socketRegistrationID':
 				this.socketRegistrationID = infoData;
 				this.socketRegister();
@@ -1139,10 +1135,7 @@ var ajaxChat = {
 						+ '</a></li>';
 			}
 		} else {
-			menu 	= '<li><a href="javascript:ajaxChat.sendMessageWrapper(\'/quit\');">'
-					+ this.lang['userMenuLogout']
-					+ '</a></li>'
-					+ '<li><a href="javascript:ajaxChat.sendMessageWrapper(\'/who\');">'
+			menu 	= '<li><a href="javascript:ajaxChat.sendMessageWrapper(\'/who\');">'
 					+ this.lang['userMenuWho']
 					+ '</a></li>'
 					+ '<li><a href="javascript:ajaxChat.sendMessageWrapper(\'/ignore\');">'
@@ -1898,16 +1891,6 @@ var ajaxChat = {
 		}
 	},
 
-	logout: function() {
-		clearTimeout(this.timer);
-		var message = 'logout=true';
-		this.makeRequest(this.ajaxURL,'POST',message);
-	},
-	
-	handleLogout: function(url) {
-		window.location.href = url;
-	},
-
 	toggleSetting: function(setting, buttonID) {
 		this.setSetting(setting, !this.getSetting(setting));
 		if(buttonID) {
@@ -2060,8 +2043,6 @@ var ajaxChat = {
 			switch(textParts[0]) {
 				case '/login':
 					return this.replaceCommandLogin(textParts);
-				case '/logout':
-					return this.replaceCommandLogout(textParts);
 				case '/channelEnter':
 					return this.replaceCommandChannelEnter(textParts);
 				case '/channelLeave':
@@ -2138,15 +2119,6 @@ var ajaxChat = {
 				+ '</span>';		
 	},
 
-	replaceCommandLogout: function(textParts) {
-		var type = '';
-		if(textParts.length == 3)
-			type = textParts[2];
-		return	'<span class="chatBotMessage">'
-				+ this.lang['logout' + type].replace(/%s/, textParts[1])
-				+ '</span>';		
-	},
-	
 	replaceCommandChannelEnter: function(textParts) {
 		return	'<span class="chatBotMessage">'
 				+ this.lang['channelEnter'].replace(/%s/, textParts[1])

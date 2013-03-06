@@ -9,7 +9,7 @@
 
 class CustomAJAXChatInterface extends CustomAJAXChat {
 
-	function initialize() {
+    public function initialize() {
 		// Initialize configuration settings:
 		$this->initConfig();
 

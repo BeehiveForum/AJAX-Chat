@@ -1,9 +1,18 @@
+/*
+ * @package AJAX_Chat
+ * @author Sebastian Tschan
+ * @copyright (c) Sebastian Tschan
+ * @license GNU Affero General Public License
+ * @link https://blueimp.net/ajax/
+ */
+
+
 AJAX Chat
 =========
 
-v 0.8.6 standalone
+This is the Beehive Forum integration version:
+http://www.beehiveforum.co.uk
 
-This is the standalone version running without another web application.
 
 AJAX stands for "Asynchronous JavaScript and XML".
 The AJAX Chat clients (the user browsers) use JavaScript to query the web server for updates.
@@ -16,8 +25,8 @@ Requirements
 
 Server-Side:
 
-- PHP >= 5
-- MySQL >= 4
+- PHP >= 5.2.1
+- MySQL >= 5.1.41
 - Ruby >= 1.8 (optional)
 
 
@@ -31,76 +40,31 @@ Client-Side:
 Installation
 ============
 
-1.	Configuration settings
-	----------------------
-
-	The primary configuration settings necessary for chat to function must be in the file lib/config.php
-	You will need to create this file. An example config file can be found in lib/config.php.example
-	Duplicate this file and save it as config.php once you have filled out at least the following four fields:
-
-		$config['dbConnection']['host'] = 'your_database_hostname';
-		$config['dbConnection']['user'] = 'your_database_username';
-		$config['dbConnection']['pass'] = 'your_database_password';
-		$config['dbConnection']['name'] = 'your_database_name';
-	
-	In most cases, chat will function with only these fields filled out and you can proceed to step 2. 
-	
-	
-	If your host does not use mysqli you will need to change the connection type field:
-		$config['dbConnection']['type'] = null;
-	If this is set to "null" it defaults to "mysqli" if existing, else to "mysql".
-	
-	
-	You can reference an existing database connection link or object by changing:
-		$config['dbConnection']['link'] = null;
-	If this is set to null, a new database connection is created.
-
-
-2.	Channel settings:
-	-----------------
-	
-	Edit channels in lib/data/channels.php.
-	
-	Each channel must have a unique id (the $channels array index) and a unique name.
-	Whitespace in the channel names will be converted to the underscore "_".
-
-
-3.	User settings:
-	--------------
-
-	Edit users in lib/data/users.php.
-	
-	Each user must have a unique id (the $users array index) and a unique name.
-	The first user in the list (array index 0) is used for the guest user settings.
-	All guest users will have access to the channels set for this user and the user role AJAX_CHAT_GUEST.
-	Registered users can have the user roles AJAX_CHAT_USER, AJAX_CHAT_MODERATOR or AJAX_CHAT_ADMIN.
-	The list of channels a user has access to can be set for each user individually.
-	Whitespace in the user names will be converted to the underscore "_".
-
-
-4.	Upload to the server
+1.	Upload to the server
 	--------------------
 
-	Upload the chat folder to your server somewhere under your document root:
-	e.g. http://example.org/path/to/chat/
+	Upload the chat folder to your server into your Beehive Forum directory:
+	e.g. http://example.org/forum/chat/
 
 
-5.	Creation of database tables
+2.	Creation of database tables
 	---------------------------
 
 	Execute the provided installation script by visiting the following URL with your browser:
-	http://example.org/path/to/chat/install.php
+	http://example.org/forum/chat/install.php
 	
-	Replace "http://example.org/path/to/chat/" with the real URL to your chat directory.
+	Replace "http://example.org/forum/chat/" with the real URL to your chat directory.
 
 
-6.	Delete the installation script
+3.	Delete the installation script
 	------------------------------
 	
 	Delete the file install.php from the chat directory on your server.
 
 
-Ready! Just place a link to the chat directory on your website. :)
+Ready! Just place a link to the chat directory on your forum. :)
+
+
 
 
 Configuration files:

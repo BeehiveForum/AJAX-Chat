@@ -8,7 +8,7 @@
  */
 
 // Class to provide static encoding methods
-class AJAXChatEncoding {
+abstract class AJAXChatEncoding {
 
 	// Helper function to store special chars as we cannot use static class members in PHP4:
 	public static function getSpecialChars() {
@@ -81,7 +81,7 @@ class AJAXChatEncoding {
 		return strtr($str, AJAXChatEncoding::getSpecialChars());
 	}
 
-	public static function decodeSpecialChars($str) {
+    public function decodeSpecialChars($str) {
 		return strtr($str, array_flip(AJAXChatEncoding::getSpecialChars()));
 	}
 

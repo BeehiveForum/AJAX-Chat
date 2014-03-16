@@ -3,7 +3,7 @@
  * @package AJAX_Chat
  * @author Sebastian Tschan
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -104,6 +104,7 @@ $lang['settingsSoundEnter'] = 'Zvuk za prijavljivanje i poruke pristupanja kanal
 $lang['settingsSoundLeave'] = 'Zvuk za odjavljivanje i poruke napuštanja kanala:';
 $lang['settingsSoundChatBot'] = 'Zvuk za poruke brbljobota:';
 $lang['settingsSoundError'] = 'Zvuk za poruke pogreške:';
+$lang['settingsSoundPrivate'] = 'Zvuk za poruke privatni:';
 $lang['settingsBlink'] = 'Treptanje naslova prozora kod novih poruka:';
 $lang['settingsBlinkInterval'] = 'Trajanje treptanja (u milisekundama):';
 $lang['settingsBlinkIntervalNumber'] = 'Broj treptanja:';

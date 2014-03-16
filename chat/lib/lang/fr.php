@@ -5,7 +5,7 @@
  * @author Ettelcar
  * @author Massimiliano Tiraboschi
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -106,6 +106,7 @@ $lang['settingsSoundEnter'] = 'Son pour connexion :';
 $lang['settingsSoundLeave'] = 'Son pour déconnexion :';
 $lang['settingsSoundChatBot'] = 'Son pour message robot :';
 $lang['settingsSoundError'] = 'Son pour les erreurs :';
+$lang['settingsSoundPrivate'] = 'Son message privé:';
 $lang['settingsBlink'] = 'Clignoter à chaque nouveau message :';
 $lang['settingsBlinkInterval'] = 'Intervalle de clignotage :';
 $lang['settingsBlinkIntervalNumber'] = 'Numéro de clignotage :';

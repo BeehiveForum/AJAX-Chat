@@ -4,7 +4,7 @@
  * @author Sebastian Tschan
  * @author Cydonian
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -105,6 +105,7 @@ $lang['settingsSoundEnter'] = 'Giriş ve kanala giriş sesi:';
 $lang['settingsSoundLeave'] = 'Çıkış ve kanaldan çıkış sesi:';
 $lang['settingsSoundChatBot'] = 'Chatbot mesajları sesi:';
 $lang['settingsSoundError'] = 'Hata mesajları sesi:';
+$lang['settingsSoundPrivate'] = 'Özel mesajlar sesi:';
 $lang['settingsBlink'] = 'Yeni mesaj geldiğinde pencere başlığını kırp:';
 $lang['settingsBlinkInterval'] = 'Milisaniye olarak kırpma aralığı:';
 $lang['settingsBlinkIntervalNumber'] = 'Kırpma sayısı aralığı:';

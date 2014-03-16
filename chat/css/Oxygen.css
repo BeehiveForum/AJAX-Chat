@@ -3,7 +3,7 @@
  * @author Sebastian Tschan
  * @author Philip Nicolcev
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  * 
  * Color palette inspired by PunBB style "Oxygen":
@@ -13,6 +13,7 @@
 @import url('global.css');
 @import url('fonts.css');
 @import url('print.css');
+@import url('custom.css');
 
 @media screen,projection,handheld {
 

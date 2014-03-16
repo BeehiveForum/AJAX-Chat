@@ -2,14 +2,14 @@
  * @package AJAX_Chat
  * @author Rosina Ramirez
  * @copyright (c) Rosina Ramirez
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
- * 
  */
 
 @import url('global.css');
 @import url('fonts.css');
 @import url('print.css');
+@import url('custom.css');
 
 @media screen,projection,handheld {
 

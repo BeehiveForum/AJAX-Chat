@@ -4,7 +4,7 @@
  * @author Sebastian Tschan
  * @author of translate Carlos Rocha (aka Broas@)
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -105,6 +105,7 @@ $lang['settingsSoundEnter'] = 'Som de login:';
 $lang['settingsSoundLeave'] = 'Som de logout:';
 $lang['settingsSoundChatBot'] = 'Som para mensagens do chatbot:';
 $lang['settingsSoundError'] = 'Som para mensagens de erro:';
+$lang['settingsSoundPrivate'] = 'Som para mensagens de privadas:';
 $lang['settingsBlink'] = 'Título da janela do "piscamento" em mensagens novas:';
 $lang['settingsBlinkInterval'] = 'Intervalo do "piscamento" em milissegundos:';
 $lang['settingsBlinkIntervalNumber'] = 'Número de intervalos do "piscamento":';

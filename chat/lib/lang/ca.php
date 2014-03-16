@@ -4,7 +4,7 @@
  * @author Sebastian Tschan
  * @author Manu Quintans
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -105,6 +105,7 @@ $lang['settingsSoundEnter'] = 'So per connectar i missatges d\'entrada del canal
 $lang['settingsSoundLeave'] = 'So per desconnectar i missatges de sortida del canal:';
 $lang['settingsSoundChatBot'] = 'So pels missatges del xat:';
 $lang['settingsSoundError'] = 'So per missatges d\'error:';
+$lang['settingsSoundPrivate'] = 'So per missatges personals:';
 $lang['settingsBlink'] = 'Notificació de finestra per als nous missatges:';
 $lang['settingsBlinkInterval'] = 'Interval de notificacions intermitents (milisegons):';
 $lang['settingsBlinkIntervalNumber'] = 'Nombre de notificacions intermitents:';

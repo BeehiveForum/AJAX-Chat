@@ -4,7 +4,7 @@
  * @author Sebastian Tschan
  * @author Saša Stojanović
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -105,6 +105,7 @@ $lang['settingsSoundEnter'] = 'Zvuk za prijavljivanje i ulazak u sobu:';
 $lang['settingsSoundLeave'] = 'Zvuk za odjavljivanje i izlazak iz sobe:';
 $lang['settingsSoundChatBot'] = 'Zvuk za chatbot poruke:';
 $lang['settingsSoundError'] = 'Zvuk za poruke o grešci:';
+$lang['settingsSoundPrivate'] = 'Zvuk za privatne poruke:';
 $lang['settingsBlink'] = 'Treptanje naziva prozora za nove poruke:';
 $lang['settingsBlinkInterval'] = 'Interval treptanja u milisekundama:';
 $lang['settingsBlinkIntervalNumber'] = 'Broj intervala treptanja:';

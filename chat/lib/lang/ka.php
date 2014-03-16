@@ -3,7 +3,7 @@
  * @package AJAX_Chat
  * @author Sebastian Tschan
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -104,6 +104,7 @@ $lang['settingsSoundEnter'] = 'ავტორიზაციისა და �
 $lang['settingsSoundLeave'] = 'გასვლის და არხის მიტოვების ხმა:';
 $lang['settingsSoundChatBot'] = 'ჩატბოტის გზავნილების ხმა:';
 $lang['settingsSoundError'] = 'შედომის გზავნილების ხმა:';
+$lang['settingsSoundPrivate'] = 'Sound for private messages:';
 $lang['settingsBlink'] = 'ახალ გზავნილზე ფანჯრის დასახელების ციმციმი:';
 $lang['settingsBlinkInterval'] = 'ციმციმის ინტერვალი მილიწამებში:';
 $lang['settingsBlinkIntervalNumber'] = 'ციმციმის ინტერვალების რაოდენობა:';

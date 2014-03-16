@@ -2,7 +2,7 @@
  * @package AJAX_Chat
  * @author Sebastian Tschan
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -102,6 +102,8 @@ var ajaxChatConfig = {
 		soundChatBot: 'sound_5',
 		// Defines the sound that is played on error messages:
 		soundError: 'sound_6',
+		// Defines the sound that is played when private messages are received:
+        	soundPrivate: 'sound_7',
 		
 		// Defines if the document title blinks on new messages:
 		blink: true,
@@ -112,11 +114,10 @@ var ajaxChatConfig = {
 	},
 	
 	// Defines a list of settings which are not to be stored in a session cookie:
-	nonPersistentSettings: new Array(
-	),
+	nonPersistentSettings: [],
 
 	// Defines the list of allowed BBCodes:
-	bbCodeTags: new Array(
+	bbCodeTags:[
 		'b',
 		'i',
 		'u',
@@ -125,10 +126,10 @@ var ajaxChatConfig = {
 		'color',
 		'url',
 		'img'
-	),
+	],
 	
 	// Defines the list of allowed color codes:
-	colorCodes: new Array(
+	colorCodes: [
 		'gray',
 		'silver',
 		'white',	
@@ -146,10 +147,10 @@ var ajaxChatConfig = {
 		'olive',
 		'maroon',
 		'black'
-	),
+	],
 	
 	// Defines the list of allowed emoticon codes:
-	emoticonCodes: new Array(
+	emoticonCodes: [
 		':)',
 		':(',
 		';)',
@@ -173,10 +174,10 @@ var ajaxChatConfig = {
 		':error:',
 		':warning:',
 		':favorite:'		
- 	),
+ 	],
 	
  	// Defines the list of emoticon files associated with the emoticon codes:
-	emoticonFiles: new Array(
+	emoticonFiles: [
 		'smile.png',
 		'sad.png',
 		'wink.png',
@@ -200,7 +201,7 @@ var ajaxChatConfig = {
 		'error.png',
 		'warning.png',
 		'favorite.png'
-	),
+	],
 
 	// Defines the available sounds loaded on chat start:
 	soundFiles: {
@@ -209,7 +210,8 @@ var ajaxChatConfig = {
 		sound_3: 'sound_3.mp3',
 		sound_4: 'sound_4.mp3',
 		sound_5: 'sound_5.mp3',
-		sound_6: 'sound_6.mp3'
+		sound_6: 'sound_6.mp3',
+		sound_7: 'sound_1.mp3'
 	},
 	
 	

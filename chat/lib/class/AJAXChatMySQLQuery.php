@@ -3,21 +3,21 @@
  * @package AJAX_Chat
  * @author Sebastian Tschan
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
 // Class to perform SQL (MySQL) queries:
 class AJAXChatMySQLQuery {
 
-	protected $_connectionID;
-	protected $_sql = '';
-	protected $_result = 0;
-	protected $_errno = 0;
-	protected $_error = '';
+	var $_connectionID;
+	var $_sql = '';
+	var $_result = 0;
+	var $_errno = 0;
+	var $_error = '';
 
 	// Constructor:
-	public function __construct($sql, $connectionID = null) {
+	function __construct($sql, $connectionID = null) {
 		$this->_sql = trim($sql);
 		$this->_connectionID = $connectionID;
 		if($this->_connectionID) {
@@ -36,13 +36,13 @@ class AJAXChatMySQLQuery {
 	}
 
 	// Returns true if an error occured:
-	public function error() {
+	function error() {
 		// Returns true if the Result-ID is valid:
 		return !(bool)($this->_result);
 	}
 
 	// Returns an Error-String:
-	public function getError() {
+	function getError() {
 		if($this->error()) {
 			$str  = 'Query: '	 .$this->_sql  ."\n";
 			$str .= 'Error-Report: '	.$this->_error."\n";
@@ -54,7 +54,7 @@ class AJAXChatMySQLQuery {
 	}
 
 	// Returns the content:
-	public function fetch() {
+	function fetch() {
 		if($this->error()) {
 			return null;
 		} else {
@@ -63,7 +63,7 @@ class AJAXChatMySQLQuery {
 	}
 
 	// Returns the number of rows (SELECT or SHOW):
-	public function numRows() {
+	function numRows() {
 		if($this->error()) {
 			return null;
 		} else {
@@ -72,7 +72,7 @@ class AJAXChatMySQLQuery {
 	}
 
 	// Returns the number of affected rows (INSERT, UPDATE, REPLACE or DELETE):
-	public function affectedRows() {
+	function affectedRows() {
 		if($this->error()) {
 			return null;
 		} else {
@@ -81,7 +81,7 @@ class AJAXChatMySQLQuery {
 	}
 
 	// Frees the memory:
-	public function free() {
+	function free() {
 		@mysql_free_result($this->_result);
 	}
 	

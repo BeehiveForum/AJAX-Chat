@@ -3,19 +3,19 @@
  * @package AJAX_Chat
  * @author Sebastian Tschan
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
 class AJAXChatLanguage {
 
-	protected $_regExpAcceptLangCode;
-	protected $_availableLangCodes;
-	protected $_defaultLangCode;
-	protected $_strictMode;
-	protected $_langCode;
+	var $_regExpAcceptLangCode;
+	var $_availableLangCodes;
+	var $_defaultLangCode;
+	var $_strictMode;
+	var $_langCode;
 
-	public function __construct($availableLangCodes, $defaultLangCode, $langCode=null, $strictMode=false) {
+	function __construct($availableLangCodes, $defaultLangCode, $langCode=null, $strictMode=false) {
 		$this->_regExpAcceptLangCode = '/^([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;\s*q=(0(?:\.[0-9]{1,3})?|1(?:\.0{1,3})?))?$/i';
 		$this->_availableLangCodes = $availableLangCodes;
 		$this->_defaultLangCode = $defaultLangCode;
@@ -26,7 +26,7 @@ class AJAXChatLanguage {
 	}
 	
 	// Method to detect the language code from the HTTP_ACCEPT_LANGUAGE header:
-	public function detectLangCode() {
+	function detectLangCode() {
 		// If HTTP_ACCEPT_LANGUAGE is empty use defaultLangCode:
 		if(empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 			$this->_langCode = $this->_defaultLangCode;
@@ -83,18 +83,18 @@ class AJAXChatLanguage {
 		$this->_langCode = $currentLangCode;
 	}
 
-	public function getLangCode() {
+	function getLangCode() {
 		if(!$this->_langCode) {
 			$this->detectLangCode();
 		}
 		return $this->_langCode;
 	}
 	
-	public function setLangCode($langCode) {
+	function setLangCode($langCode) {
 		$this->_langCode = $langCode;
 	}
 
-	public function getLangCodes() {
+	function getLangCodes() {
 		return $this->_availableLangCodes;
 	}
 	

@@ -4,7 +4,7 @@
  * @author Sebastian Tschan
  * @author Eric [June 7,2008]
  * @copyright (c) Sebastian Tschan
- * @license GNU Affero General Public License
+ * @license Modified MIT License
  * @link https://blueimp.net/ajax/
  */
 
@@ -105,6 +105,7 @@ $lang['settingsSoundEnter']		= 'Ljud för Logga in/Kanal meddelanden:';
 $lang['settingsSoundLeave']		= 'Ljud för Logga ut/lämna Kanal meddelanden:';
 $lang['settingsSoundChatBot']		= 'Ljud för Chatbot meddelanden:';
 $lang['settingsSoundError']		= 'Ljud för felmeddelanden:';
+$lang['settingsSoundPrivate'] = 'Ljud för privata meddelanden:';
 $lang['settingsBlink']			= 'Blinka fönstrets titel vid nya meddelanden:';
 $lang['settingsBlinkInterval']		= 'Blinkintervall i millisekunder:';
 $lang['settingsBlinkIntervalNumber']	= 'Antal blinkintervaller:';

@@ -14,7 +14,7 @@ error_reporting(E_ALL);
 file_exists('lib/config.php') or die('Failed to load lib/config.php. Did you remember to create a config file based on config.php.example?');
 
 // Path to the chat directory:
-define('AJAX_CHAT_PATH', dirname($_SERVER['SCRIPT_FILENAME']).'/');
+define('AJAX_CHAT_PATH', __DIR__.'/');
 
 // Include custom libraries and initialization code:
 require(AJAX_CHAT_PATH.'lib/custom.php');
@@ -77,4 +77,3 @@ $ajaxChatInstaller = new CustomAJAXChatInstaller();
 
 // Create the database tables:
 $ajaxChatInstaller->createDataBaseTables();
-?>

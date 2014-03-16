@@ -28,7 +28,7 @@ define("BH_INCLUDE_PATH", __DIR__. "/../../../BeehiveForum/forum/include/");
 define("BH_FORUM_PATH", "../");
 
 // Beehive Forum bootstrap
-require_once '../../BeehiveForum/forum/boot.php';
+require_once __DIR__. '/../../../BeehiveForum/forum/boot.php';
 
 // Get forum WEBTAG
 $webtag = get_webtag();

@@ -122,4 +122,3 @@ $lang['logsTime'] = 'Čas';
 $lang['logsSearch'] = 'Vyhľadávanie';
 $lang['logsPrivateChannels'] = 'Súkromný kanál';
 $lang['logsPrivateMessages'] = 'Súkromná správa';
-?>

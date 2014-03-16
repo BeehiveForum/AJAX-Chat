@@ -121,4 +121,3 @@ $lang['logsTime'] = 'დრო';
 $lang['logsSearch'] = 'ძიება';
 $lang['logsPrivateChannels'] = 'პირადი არხები';
 $lang['logsPrivateMessages'] = 'პირადი გზავნილები';
-?>

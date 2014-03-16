@@ -122,4 +122,3 @@ $lang['logsTime'] = '时间';
 $lang['logsSearch'] = '搜索';
 $lang['logsPrivateChannels'] = '私人频道';
 $lang['logsPrivateMessages'] = '私人消息';
-?>

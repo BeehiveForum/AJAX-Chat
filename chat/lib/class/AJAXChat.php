@@ -10,25 +10,26 @@
 // Ajax Chat backend logic:
 class AJAXChat {
 
-	var $db;
-	var $_config;
-	var $_requestVars;
-	var $_infoMessages;
-	var $_channels;
-	var $_allChannels;
-	var $_view;
-	var $_lang;
-	var $_invitations;
-	var $_customVars;
-	var $_sessionNew;
-	var $_onlineUsersData;
-	var $_bannedUsersData;
+	/** @var AJAXChatDataBase */
+    public $db;
+	protected $_config;
+	protected $_requestVars;
+	protected $_infoMessages;
+	protected $_channels;
+	protected $_allChannels;
+	protected $_view;
+	protected $_lang;
+	protected $_invitations;
+	protected $_customVars;
+	protected $_sessionNew;
+	protected $_onlineUsersData;
+	protected $_bannedUsersData;
 	
-	function __construct() {
+    public function __construct() {
 		$this->initialize();
 	}
 
-	function initialize() {
+    public function initialize() {
 		// Initialize configuration settings:
 		$this->initConfig();
 
@@ -45,7 +46,7 @@ class AJAXChat {
 		$this->handleRequest();
 	}
 
-	function initConfig() {
+    public function initConfig() {
 		$config = null;
 		if (!include(AJAX_CHAT_PATH.'lib/config.php')) {
 			echo('<strong>Error:</strong> Could not find a config.php file in "'.AJAX_CHAT_PATH.'"lib/". Check to make sure the file exists.');
@@ -57,7 +58,7 @@ class AJAXChat {
 		$this->initCustomConfig();
 	}
 	
-	function initRequestVars() {
+	public function initRequestVars() {
 		$this->_requestVars = array();
 		$this->_requestVars['ajax']			= isset($_REQUEST['ajax'])			? true							: false;
 		$this->_requestVars['userID']		= isset($_REQUEST['userID'])		? (int)$_REQUEST['userID']		: null;
@@ -96,7 +97,7 @@ class AJAXChat {
 		}
 	}
 	
-	function initDataBaseConnection() {
+	public function initDataBaseConnection() {
 		// Create a new database object:
 		$this->db = new AJAXChatDataBase(
 			$this->_config['dbConnection']
@@ -120,11 +121,11 @@ class AJAXChat {
 		unset($this->_config['dbConnection']);			
 	}
 	
-	function getDataBaseTable($table) {
+	public function getDataBaseTable($table) {
 		return ($this->db->getName() ? '`'.$this->db->getName().'`.'.$this->getConfig('dbTableNames',$table) : $this->getConfig('dbTableNames',$table));
 	}
 
-	function initSession() {
+	public function initSession() {
 		// Start the PHP session (if not already started):
 		$this->startSession();
 
@@ -168,7 +169,7 @@ class AJAXChat {
 		$this->initCustomSession();
 	}
 
-	function initLogsViewSession() {
+	public function initLogsViewSession() {
 		if($this->getConfig('socketServerEnabled')) {
 			if(!$this->getSessionVar('logsViewSocketAuthenticated')) {
 				$this->updateLogsViewSocketAuthentication();
@@ -177,7 +178,7 @@ class AJAXChat {
 		}
 	}
 
-	function updateLogsViewSocketAuthentication() {
+	public function updateLogsViewSocketAuthentication() {
 		if($this->getUserRole() != AJAX_CHAT_ADMIN) {
 			$channels = array();
 			foreach($this->getChannels() as $channel) {
@@ -199,7 +200,7 @@ class AJAXChat {
 		);
 	}
 
-	function initChatViewSession() {
+	public function initChatViewSession() {
 		// If channel is not null we are logged in to the chat view:
 		if($this->getChannel() !== null) {
 			// Check if the current user has been logged out due to inactivity:
@@ -220,7 +221,7 @@ class AJAXChat {
 		}
 	}
 
-	function isChatOpen() {
+	public function isChatOpen() {
 		if($this->getUserRole() == AJAX_CHAT_ADMIN)
 			return true;
 		if($this->getConfig('chatClosed'))
@@ -248,7 +249,7 @@ class AJAXChat {
 		return true;	
 	}
 
-	function handleRequest() {
+	public function handleRequest() {
 		if($this->getRequestVar('ajax')) {
 			if($this->isLoggedIn()) {
 				// Parse info requests (for current userName, etc.):
@@ -268,13 +269,13 @@ class AJAXChat {
 		}
 	}
 
-	function parseCommandRequests() {
+	public function parseCommandRequests() {
 		if($this->getRequestVar('delete') !== null) {
 			$this->deleteMessage($this->getRequestVar('delete'));
 		}
 	}
 
-	function parseInfoRequests() {
+	public function parseInfoRequests() {
 		if($this->getRequestVar('getInfos')) {
 			$infoRequests = explode(',', $this->getRequestVar('getInfos'));			
 			foreach($infoRequests as $infoRequest) {
@@ -283,7 +284,7 @@ class AJAXChat {
 		}
 	}
 	
-	function parseInfoRequest($infoRequest) {
+	public function parseInfoRequest($infoRequest) {
 		switch($infoRequest) {
 			case 'userID':
 				$this->addInfoMessage($this->getUserID(), 'userID');
@@ -308,7 +309,7 @@ class AJAXChat {
 		}
 	}
 
-	function sendXHTMLContent() {
+	public function sendXHTMLContent() {
 		$httpHeader = new AJAXChatHTTPHeader($this->getConfig('contentEncoding'), $this->getConfig('contentType'));
 
 		$template = new AJAXChatTemplate($this, $this->getTemplateFileName(), $httpHeader->getContentType());
@@ -320,7 +321,7 @@ class AJAXChat {
 		echo $template->getParsedContent();
 	}
 
-	function getTemplateFileName() {
+	public function getTemplateFileName() {
 		switch($this->getView()) {
 			case 'chat':
 				return AJAX_CHAT_PATH.'lib/template/loggedIn.html';
@@ -331,7 +332,7 @@ class AJAXChat {
 		}
 	}
 
-	function initView() {
+	public function initView() {
 		$this->_view = null;
 		// "chat" is the default view:
 		$view = ($this->getRequestVar('view') === null) ? 'chat' : $this->getRequestVar('view');
@@ -340,11 +341,11 @@ class AJAXChat {
 		}
 	}
 
-	function getView() {
+	public function getView() {
 		return $this->_view;
 	}
 
-	function hasAccessTo($view) {
+	public function hasAccessTo($view) {
 		switch($view) {
 			case 'chat':
 			case 'teaser':
@@ -365,7 +366,7 @@ class AJAXChat {
 		}
 	}
 	
-	function login() {
+	public function login() {
 		// Retrieve valid login user data (from request variables or session data):
 		$userData = $this->getValidLoginUserData();
 		
@@ -442,7 +443,7 @@ class AJAXChat {
 		return true;
 	}
 	
-	function chatViewLogin() {
+	public function chatViewLogin() {
 		$this->setChannel($this->getValidRequestChannelID());
 		$this->addToOnlineList();
 		
@@ -460,7 +461,7 @@ class AJAXChat {
 		);	
 	}
 
-	function getValidRequestChannelID() {
+	public function getValidRequestChannelID() {
 		$channelID = $this->getRequestVar('channelID');
 		$channelName = $this->getRequestVar('channelName');		
 		// Check the given channelID, or get channelID from channelName:
@@ -485,7 +486,7 @@ class AJAXChat {
 		return $channelID;
 	}
 
-	function initChannel() {
+	public function initChannel() {
 		$channelID = $this->getRequestVar('channelID');
 		$channelName = $this->getRequestVar('channelName');
 		if($channelID !== null) {
@@ -499,7 +500,7 @@ class AJAXChat {
 		}
 	}
 	
-	function logout($type=null) {
+	public function logout($type=null) {
 		// Update the socket server authentication for the user:
 		if($this->getConfig('socketServerEnabled')) {
 			$this->updateSocketAuthentication($this->getUserID());
@@ -514,7 +515,7 @@ class AJAXChat {
 		$this->initView();
 	}
 	
-	function chatViewLogout($type) {
+	public function chatViewLogout($type) {
 		$this->removeFromOnlineList();
 		if($type !== null) {
 			$type = ' '.$type;
@@ -529,7 +530,7 @@ class AJAXChat {
 		);
 	}
 	
-	function switchChannel($channelName) {
+	public function switchChannel($channelName) {
 		$channelID = $this->getChannelIDFromChannelName($channelName);
 
 		if($channelID !== null && $this->getChannel() == $channelID) {
@@ -576,7 +577,7 @@ class AJAXChat {
 		$this->_requestVars['lastID'] = 0;
 	}
 	
-	function addToOnlineList() {
+	public function addToOnlineList() {
 		$sql = 'INSERT INTO '.$this->getDataBaseTable('online').'(
 					userID,
 					userName,
@@ -606,7 +607,7 @@ class AJAXChat {
 		$this->resetOnlineUsersData();
 	}
 	
-	function removeFromOnlineList() {
+	public function removeFromOnlineList() {
 		$sql = 'DELETE FROM
 					'.$this->getDataBaseTable('online').'
 				WHERE
@@ -624,7 +625,7 @@ class AJAXChat {
 		$this->removeUserFromOnlineUsersData();
 	}
 	
-	function updateOnlineList() {
+	public function updateOnlineList() {
 		$sql = 'UPDATE
 					'.$this->getDataBaseTable('online').'
 				SET
@@ -647,7 +648,7 @@ class AJAXChat {
 		$this->resetOnlineUsersData();
 	}
 	
-	function initMessageHandling() {
+	public function initMessageHandling() {
 		// Don't handle messages if we are not in chat view:
 		if($this->getView() != 'chat') {
 			return;
@@ -665,7 +666,7 @@ class AJAXChat {
 		}
 	}
 	
-	function insertParsedMessage($text) {
+	public function insertParsedMessage($text) {
 
 		// If a queryUserName is set, sent all messages as private messages to this userName:
 		if($this->getQueryUserName() !== null && strpos($text, '/') !== 0) {
@@ -783,7 +784,7 @@ class AJAXChat {
 		}
 	}
 
-	function insertParsedMessageJoin($textParts) {
+	public function insertParsedMessageJoin($textParts) {
 		if(count($textParts) == 1) {
 			// join with no arguments is the own private channel, if allowed:
 			if($this->isAllowedToCreatePrivateChannel()) {
@@ -800,7 +801,7 @@ class AJAXChat {
 		}
 	}
 	
-	function insertParsedMessagePrivMsg($textParts) {
+	public function insertParsedMessagePrivMsg($textParts) {
 		if($this->isAllowedToSendPrivateMessage()) {
 			if(count($textParts) < 3) {
 				if(count($textParts) == 2) {
@@ -856,7 +857,7 @@ class AJAXChat {
 		}
 	}
 	
-	function insertParsedMessageInvite($textParts) {
+	public function insertParsedMessageInvite($textParts) {
 		if($this->getChannel() == $this->getPrivateChannelID() || in_array($this->getChannel(), $this->getChannels())) {
 			if(count($textParts) == 1) {
 				$this->insertChatBotMessage(
@@ -894,7 +895,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageUninvite($textParts) {
+	public function insertParsedMessageUninvite($textParts) {
 		if($this->getChannel() == $this->getPrivateChannelID() || in_array($this->getChannel(), $this->getChannels())) {
 			if(count($textParts) == 1) {
 				$this->insertChatBotMessage(
@@ -932,7 +933,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageQuery($textParts) {
+	public function insertParsedMessageQuery($textParts) {
 		if($this->isAllowedToSendPrivateMessage()) {
 			if(count($textParts) == 1) {
 				if($this->getQueryUserName() !== null) {
@@ -975,7 +976,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageKick($textParts) {
+	public function insertParsedMessageKick($textParts) {
 		// Only moderators/admins may kick users:
 		if($this->getUserRole() == AJAX_CHAT_ADMIN || $this->getUserRole() == AJAX_CHAT_MODERATOR) {
 			if(count($textParts) == 1) {
@@ -1034,7 +1035,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageBans($textParts) {
+	public function insertParsedMessageBans($textParts) {
 		// Only moderators/admins may see the list of banned users:
 		if($this->getUserRole() == AJAX_CHAT_ADMIN || $this->getUserRole() == AJAX_CHAT_MODERATOR) {
 			$this->removeExpiredBans();
@@ -1058,7 +1059,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageUnban($textParts) {
+	public function insertParsedMessageUnban($textParts) {
 		// Only moderators/admins may unban users:
 		if($this->getUserRole() == AJAX_CHAT_ADMIN || $this->getUserRole() == AJAX_CHAT_MODERATOR) {
 			$this->removeExpiredBans();
@@ -1090,7 +1091,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageAction($textParts) {
+	public function insertParsedMessageAction($textParts) {
 		if(count($textParts) == 1) {
 			$this->insertChatBotMessage(
 				$this->getPrivateMessageID(),
@@ -1112,7 +1113,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageWho($textParts) {
+	public function insertParsedMessageWho($textParts) {
 		if(count($textParts) == 1) {
 			if($this->isAllowedToListHiddenUsers()) {
 				// List online users from any channel:
@@ -1165,7 +1166,7 @@ class AJAXChat {
 		}
 	}
 		
-	function insertParsedMessageList($textParts) {
+	public function insertParsedMessageList($textParts) {
 		// Get the names of all accessible channels:
 		$channelNames = $this->getChannelNames();
 		// Add the own private channel, if allowed:
@@ -1185,7 +1186,7 @@ class AJAXChat {
 		);
 	}
 
-	function insertParsedMessageWhereis($textParts) {
+	public function insertParsedMessageWhereis($textParts) {
 		if(count($textParts) == 1) {
 			$this->insertChatBotMessage(
 				$this->getPrivateMessageID(),
@@ -1222,7 +1223,7 @@ class AJAXChat {
 		}
 	}
 			
-	function insertParsedMessageWhois($textParts) {
+	public function insertParsedMessageWhois($textParts) {
 		// Only moderators/admins:
 		if($this->getUserRole() == AJAX_CHAT_ADMIN || $this->getUserRole() == AJAX_CHAT_MODERATOR) {
 			if(count($textParts) == 1) {
@@ -1254,7 +1255,7 @@ class AJAXChat {
 		}
 	}
 			
-	function insertParsedMessageRoll($textParts) {
+	public function insertParsedMessageRoll($textParts) {
 		if(count($textParts) == 1) {
 			// default is one d6:
 			$text = '/roll '.$this->getUserName().' 1d6 '.$this->rollDice(6);
@@ -1287,7 +1288,7 @@ class AJAXChat {
 		);
 	}
 			
-	function insertParsedMessageNick($textParts) {
+	public function insertParsedMessageNick($textParts) {
 		if(!$this->getConfig('allowNickChange') ||
 			(!$this->getConfig('allowGuestUserName') && $this->getUserRole() == AJAX_CHAT_GUEST)) {
 			$this->insertChatBotMessage(
@@ -1345,7 +1346,7 @@ class AJAXChat {
 		}
 	}
 	
-	function insertMessage($text) {
+	public function insertMessage($text) {
 		if(!$this->isAllowedToWriteMessage())
 			return;
 
@@ -1364,7 +1365,7 @@ class AJAXChat {
 		$this->insertParsedMessage($text);
 	}
 
-	function deleteMessage($messageID) {
+	public function deleteMessage($messageID) {
 		// Retrieve the channel of the given message:
 		$sql = 'SELECT
 					channel
@@ -1438,7 +1439,7 @@ class AJAXChat {
 		return false;
 	}
 	
-	function floodControl() {
+	public function floodControl() {
 		// Moderators and Admins need no flood control:
 		if($this->getUserRole() == AJAX_CHAT_MODERATOR || $this->getUserRole() == AJAX_CHAT_ADMIN) {
 			return true;
@@ -1465,7 +1466,7 @@ class AJAXChat {
 		return true;
 	}
 	
-	function isAllowedToWriteMessage() {
+	public function isAllowedToWriteMessage() {
 		if($this->getUserRole() != AJAX_CHAT_GUEST)
 			return true;
 		if($this->getConfig('allowGuestWrite'))
@@ -1473,7 +1474,7 @@ class AJAXChat {
 		return false;
 	}
 
-	function insertChatBotMessage($channelID, $messageText, $ip=null, $mode=0) {
+	public function insertChatBotMessage($channelID, $messageText, $ip=null, $mode=0) {
 		$this->insertCustomMessage(
 			$this->getConfig('chatBotID'),
 			$this->getConfig('chatBotName'),
@@ -1485,7 +1486,7 @@ class AJAXChat {
 		);
 	}
 	
-	function insertCustomMessage($userID, $userName, $userRole, $channelID, $text, $ip=null, $mode=0) {
+	public function insertCustomMessage($userID, $userName, $userRole, $channelID, $text, $ip=null, $mode=0) {
 		// The $mode parameter is used for socket updates:
 		// 0 = normal messages
 		// 1 = channel messages (e.g. login/logout, channel enter/leave, kick)
@@ -1537,7 +1538,7 @@ class AJAXChat {
 		}
 	}
 
-	function getSocketBroadcastMessage(
+	public function getSocketBroadcastMessage(
 		$messageID,
 		$timeStamp,
 		$userID,
@@ -1575,7 +1576,7 @@ class AJAXChat {
 		return $xml;
 	}
 
-	function sendSocketMessage($message) {
+	public function sendSocketMessage($message) {
 		// Open a TCP socket connection to the socket server:
 		if($socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) {
 			if(@socket_connect($socket,	$this->getConfig('socketServerIP'),	$this->getConfig('socketServerPort'))) {
@@ -1592,7 +1593,7 @@ class AJAXChat {
 		}		
 	}
 
-	function updateSocketAuthentication($userID, $socketRegistrationID=null, $channels=null) {
+	public function updateSocketAuthentication($userID, $socketRegistrationID=null, $channels=null) {
 		// If no $socketRegistrationID or no $channels are given the authentication is removed for the given user:
 		$authentication = '<authenticate chatID="'.$this->getConfig('socketServerChatID').'" userID="'.$userID.'" regID="'.$socketRegistrationID.'">';
 		if($channels) {
@@ -1604,22 +1605,22 @@ class AJAXChat {
 		$this->sendSocketMessage($authentication);
 	}
 
-	function setSocketRegistrationID($value) {
+	public function setSocketRegistrationID($value) {
 		$this->setSessionVar('SocketRegistrationID', $value);
 	}
 	
-	function getSocketRegistrationID() {
+	public function getSocketRegistrationID() {
 		return $this->getSessionVar('SocketRegistrationID');
 	}
 	
-	function rollDice($sides) {
+	public function rollDice($sides) {
 		// seed with microseconds since last "whole" second:
 		mt_srand((double)microtime()*1000000);
 		
 		return mt_rand(1, $sides);
 	}
 	
-	function kickUser($userName, $banMinutes=null, $userID=null) {
+	public function kickUser($userName, $banMinutes=null, $userID=null) {
 		if($userID === null) {
 			$userID = $this->getIDFromName($userName);
 		}
@@ -1657,7 +1658,7 @@ class AJAXChat {
 		$this->removeUserFromOnlineUsersData($userID);
 	}
 
-	function getBannedUsersData($key=null, $value=null) {
+	public function getBannedUsersData($key=null, $value=null) {
 		if($this->_bannedUsersData === null) {
 			$this->_bannedUsersData = array();
 
@@ -1709,11 +1710,11 @@ class AJAXChat {
 		return $this->_bannedUsersData;
 	}
 	
-	function getBannedUsers() {
+	public function getBannedUsers() {
 		return $this->getBannedUsersData('userName');
 	}
 	
-	function banUser($userName, $banMinutes=null, $userID=null) {
+	public function banUser($userName, $banMinutes=null, $userID=null) {
 		if($userID === null) {
 			$userID = $this->getIDFromName($userName);
 		}
@@ -1754,7 +1755,7 @@ class AJAXChat {
 		}
 	}
 	
-	function unbanUser($userName) {
+	public function unbanUser($userName) {
 		$sql = 'DELETE FROM
 					'.$this->getDataBaseTable('bans').'
 				WHERE
@@ -1770,7 +1771,7 @@ class AJAXChat {
 		}
 	}
 	
-	function removeExpiredBans() {
+	public function removeExpiredBans() {
 		$sql = 'DELETE FROM
 					'.$this->getDataBaseTable('bans').'
 				WHERE
@@ -1786,7 +1787,7 @@ class AJAXChat {
 		}
 	}
 	
-	function setInactive($userID, $userName=null) {
+	public function setInactive($userID, $userName=null) {
 		$condition = 'userID='.$this->db->makeSafe($userID);
 		if($userName !== null) {
 			$condition .= ' OR userName='.$this->db->makeSafe($userName);
@@ -1810,7 +1811,7 @@ class AJAXChat {
 		$this->resetOnlineUsersData();
 	}
 	
-	function removeInactive() {
+	public function removeInactive() {
 		$sql = 'SELECT
 					userID,
 					userName,
@@ -1872,7 +1873,7 @@ class AJAXChat {
 		}
 	}
 
-	function updateOnlineStatus() {
+	public function updateOnlineStatus() {
 		// Update online status every 50 seconds (this allows update requests to be in time):
 		if(!$this->getStatusUpdateTimeStamp() || ((time() - $this->getStatusUpdateTimeStamp()) > 50)) {
 			$this->updateOnlineList();
@@ -1880,7 +1881,7 @@ class AJAXChat {
 		}
 	}
 	
-	function checkAndRemoveInactive() {
+	public function checkAndRemoveInactive() {
 		// Remove inactive users every inactiveCheckInterval:
 		if(!$this->getInactiveCheckTimeStamp() || ((time() - $this->getInactiveCheckTimeStamp()) > $this->getConfig('inactiveCheckInterval')*60)) {
 			$this->removeInactive();
@@ -1888,7 +1889,7 @@ class AJAXChat {
 		}
 	}
 	
-	function sendXMLMessages() {		
+	public function sendXMLMessages() {		
 		$httpHeader = new AJAXChatHTTPHeader('UTF-8', 'text/xml');
 
 		// Send HTTP header:
@@ -1898,7 +1899,7 @@ class AJAXChat {
 		echo $this->getXMLMessages();
 	}
 
-	function getXMLMessages() {
+	public function getXMLMessages() {
 		switch($this->getView()) {
 			case 'chat':
 				return $this->getChatViewXMLMessages();
@@ -1911,7 +1912,7 @@ class AJAXChat {
 		}
 	}
 
-	function getMessageCondition() {
+	public function getMessageCondition() {
 		$condition = 	'id > '.$this->db->makeSafe($this->getRequestVar('lastID')).'
 						AND (
 							channel = '.$this->db->makeSafe($this->getChannel()).'
@@ -1929,7 +1930,7 @@ class AJAXChat {
 		return $condition;
 	}
 	
-	function getMessageFilter() {
+	public function getMessageFilter() {
 			$filterChannelMessages = '';
 			if(!$this->getConfig('showChannelMessages') || $this->getRequestVar('shoutbox')) {
 				$filterChannelMessages = '	AND NOT (
@@ -1947,7 +1948,7 @@ class AJAXChat {
 			return $filterChannelMessages;		
 	}
 
-	function getInfoMessagesXML() {
+	public function getInfoMessagesXML() {
 		$xml = '<infos>';
 		// Go through the info messages:
 		foreach($this->getInfoMessages() as $type=>$infoArray) {
@@ -1961,7 +1962,7 @@ class AJAXChat {
 		return $xml;
 	}
 
-	function getChatViewOnlineUsersXML($channelIDs) {
+	public function getChatViewOnlineUsersXML($channelIDs) {
 		// Get the online users for the given channels:
 		$onlineUsersData = $this->getOnlineUsersData($channelIDs);		
 		$xml = '<users>';
@@ -1978,7 +1979,7 @@ class AJAXChat {
 		return $xml;
 	}
 
-	function getLogoutXMLMessage() {
+	public function getLogoutXMLMessage() {
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml .= '<root>';
 		$xml .= '<infos>';
@@ -1990,7 +1991,7 @@ class AJAXChat {
 		return $xml;
 	}
 
-	function getChatViewMessageXML(
+	public function getChatViewMessageXML(
 		$messageID,
 		$timeStamp,
 		$userID,
@@ -2012,7 +2013,7 @@ class AJAXChat {
 		return $message;
 	}
 
-	function getChatViewMessagesXML() {
+	public function getChatViewMessagesXML() {
 		// Get the last messages in descending order (this optimises the LIMIT usage):
 		$sql = 'SELECT
 					id,
@@ -2062,7 +2063,7 @@ class AJAXChat {
 		return $messages;
 	}
 	
-	function getChatViewXMLMessages() {
+	public function getChatViewXMLMessages() {
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml .= '<root>';
 		$xml .= $this->getInfoMessagesXML();
@@ -2072,7 +2073,7 @@ class AJAXChat {
 		return $xml;
 	}
 
-	function getTeaserMessageCondition() {
+	public function getTeaserMessageCondition() {
 		$channelID = $this->getValidRequestChannelID();		
 		$condition = 	'channel = '.$this->db->makeSafe($channelID).'
 						AND
@@ -2087,7 +2088,7 @@ class AJAXChat {
 		return $condition;
 	}
 
-	function getTeaserViewMessagesXML() {
+	public function getTeaserViewMessagesXML() {
 		// Get the last messages in descending order (this optimises the LIMIT usage):
 		$sql = 'SELECT
 					id,
@@ -2139,7 +2140,7 @@ class AJAXChat {
 		return $messages;
 	}
 
-	function getTeaserViewXMLMessages() {
+	public function getTeaserViewXMLMessages() {
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml .= '<root>';
 		$xml .= $this->getInfoMessagesXML();
@@ -2148,7 +2149,7 @@ class AJAXChat {
 		return $xml;
 	}
 	
-	function getLogsViewCondition() {
+	public function getLogsViewCondition() {
 		$condition = 'id > '.$this->db->makeSafe($this->getRequestVar('lastID'));
 		
 		// Check the channel condition:
@@ -2256,7 +2257,7 @@ class AJAXChat {
 		return $condition;
 	}
 
-	function getLogsViewMessagesXML() {
+	public function getLogsViewMessagesXML() {
 		$sql = 'SELECT
 					id,
 					userID,
@@ -2306,7 +2307,7 @@ class AJAXChat {
 		return $xml;
 	}
 	
-	function getLogsViewXMLMessages() {
+	public function getLogsViewXMLMessages() {
 		$xml = '<?xml version="1.0" encoding="UTF-8"?>';
 		$xml .= '<root>';
 		$xml .= $this->getInfoMessagesXML();
@@ -2315,7 +2316,7 @@ class AJAXChat {
 		return $xml;
 	}
 		
-	function purgeLogs() {
+	public function purgeLogs() {
 		$sql = 'DELETE FROM
 					'.$this->getDataBaseTable('messages').'
 				WHERE
@@ -2331,7 +2332,7 @@ class AJAXChat {
 		}
 	}
 	
-	function getInfoMessages($type=null) {
+	public function getInfoMessages($type=null) {
 		if(!isset($this->_infoMessages)) {
 			$this->_infoMessages = array();
 		}
@@ -2345,7 +2346,7 @@ class AJAXChat {
 		}
 	}
 	
-	function addInfoMessage($info, $type='error') {
+	public function addInfoMessage($info, $type='error') {
 		if(!isset($this->_infoMessages)) {
 			$this->_infoMessages = array();
 		}
@@ -2357,25 +2358,25 @@ class AJAXChat {
 		}
 	}
 	
-	function getRequestVars() {
+	public function getRequestVars() {
 		return $this->_requestVars;
 	}
 	
-	function getRequestVar($key) {
+	public function getRequestVar($key) {
 		if($this->_requestVars && isset($this->_requestVars[$key])) {
 			return $this->_requestVars[$key];
 		}
 		return null;
 	}
 	
-	function setRequestVar($key, $value) {
+	public function setRequestVar($key, $value) {
 		if(!$this->_requestVars) {
 			$this->_requestVars = array();
 		}
 		$this->_requestVars[$key] = $value;
 	}
 
-	function getOnlineUsersData($channelIDs=null, $key=null, $value=null) {
+	public function getOnlineUsersData($channelIDs=null, $key=null, $value=null) {
 		if($this->_onlineUsersData === null) {
 			$this->_onlineUsersData = array();
 			
@@ -2437,7 +2438,7 @@ class AJAXChat {
 		return $this->_onlineUsersData;
 	}
 
-	function removeUserFromOnlineUsersData($userID=null) {
+	public function removeUserFromOnlineUsersData($userID=null) {
 		if(!$this->_onlineUsersData) {
 			return;
 		}
@@ -2450,11 +2451,11 @@ class AJAXChat {
 		}
 	}
 	
-	function resetOnlineUsersData() {
+	public function resetOnlineUsersData() {
 		$this->_onlineUsersData = null;
 	}
 
-	function getOnlineUsers($channelIDs=null) {
+	public function getOnlineUsers($channelIDs=null) {
 		return $this->getOnlineUsersData($channelIDs, 'userName');
 	}
 
@@ -2462,7 +2463,7 @@ class AJAXChat {
 		return $this->getOnlineUsersData($channelIDs, 'userID');
 	}
 
-	function startSession() {
+	public function startSession() {
 		if(!session_id()) {
 			// Set the session name:
 			session_name($this->getConfig('sessionName'));
@@ -2483,7 +2484,7 @@ class AJAXChat {
 		}
 	}
 	
-	function destroySession() {
+	public function destroySession() {
 		if($this->_sessionNew) {	
 			// Delete all session variables:
 			$_SESSION = array();
@@ -2512,14 +2513,14 @@ class AJAXChat {
 		}
 	}
 
-	function regenerateSessionID() {
+	public function regenerateSessionID() {
 		if($this->_sessionNew) {
 			// Regenerate session id:
 			@session_regenerate_id(true);
 		}
 	}
 
-	function getSessionVar($key, $prefix=null) {
+	public function getSessionVar($key, $prefix=null) {
 		if($prefix === null)
 			$prefix = $this->getConfig('sessionKeyPrefix');
 
@@ -2530,7 +2531,7 @@ class AJAXChat {
 			return null;
 	}
 	
-	function setSessionVar($key, $value, $prefix=null) {
+	public function setSessionVar($key, $value, $prefix=null) {
 		if($prefix === null)
 			$prefix = $this->getConfig('sessionKeyPrefix');
 		
@@ -2538,23 +2539,23 @@ class AJAXChat {
 		$_SESSION[$prefix.$key] = $value;
 	}
 	
-	function getSessionIP() {
+	public function getSessionIP() {
 		return $this->getSessionVar('IP');
 	}
 	
-	function setSessionIP($ip) {
+	public function setSessionIP($ip) {
 		$this->setSessionVar('IP', $ip);
 	}
 	
-	function getQueryUserName() {
+	public function getQueryUserName() {
 		return $this->getSessionVar('QueryUserName');
 	}
 	
-	function setQueryUserName($userName) {
+	public function setQueryUserName($userName) {
 		$this->setSessionVar('QueryUserName', $userName);
 	}
 	
-	function getInvitations() {
+	public function getInvitations() {
 		if($this->_invitations === null) {
 			$this->_invitations = array();
 			
@@ -2585,7 +2586,7 @@ class AJAXChat {
 		return $this->_invitations;
 	}
 
-	function removeExpiredInvitations() {
+	public function removeExpiredInvitations() {
 		$sql = 'DELETE FROM
 					'.$this->getDataBaseTable('invitations').'
 				WHERE
@@ -2601,7 +2602,7 @@ class AJAXChat {
 		}
 	}
 
-	function addInvitation($userID, $channelID=null) {
+	public function addInvitation($userID, $channelID=null) {
 		$this->removeExpiredInvitations();
 
 		$channelID = ($channelID === null) ? $this->getChannel() : $channelID;
@@ -2627,7 +2628,7 @@ class AJAXChat {
 		}
 	}
 
-	function removeInvitation($userID, $channelID=null) {
+	public function removeInvitation($userID, $channelID=null) {
 		$channelID = ($channelID === null) ? $this->getChannel() : $channelID;
 
 		$sql = 'DELETE FROM
@@ -2647,46 +2648,46 @@ class AJAXChat {
 		}
 	}
 	
-	function getUserID() {
+	public function getUserID() {
 		return $this->getSessionVar('UserID');
 	}
 	
-	function setUserID($id) {
+	public function setUserID($id) {
 		$this->setSessionVar('UserID', $id);
 	}
 
-	function getUserName() {
+	public function getUserName() {
 		return $this->getSessionVar('UserName');
 	}
 	
-	function setUserName($name) {
+	public function setUserName($name) {
 		$this->setSessionVar('UserName', $name);
 	}
 
-	function getLoginUserName() {
+	public function getLoginUserName() {
 		return $this->getSessionVar('LoginUserName');
 	}
 	
-	function setLoginUserName($name) {
+	public function setLoginUserName($name) {
 		$this->setSessionVar('LoginUserName', $name);
 	}
 
-	function getUserRole() {		
+	public function getUserRole() {		
 		$userRole = $this->getSessionVar('UserRole');
 		if($userRole === null)
 			return AJAX_CHAT_GUEST;
 		return $userRole;
 	}
 	
-	function setUserRole($role) {
+	public function setUserRole($role) {
 		$this->setSessionVar('UserRole', $role);
 	}
 
-	function getChannel() {
+	public function getChannel() {
 		return $this->getSessionVar('Channel');
 	}
 	
-	function setChannel($channel) {
+	public function setChannel($channel) {
 		$this->setSessionVar('Channel', $channel);
 		
 		// Save the channel enter timestamp:
@@ -2707,63 +2708,63 @@ class AJAXChat {
 		}
 	}
 
-	function isLoggedIn() {
+	public function isLoggedIn() {
 		return (bool)$this->getSessionVar('LoggedIn');
 	}
 	
-	function setLoggedIn($bool) {
+	public function setLoggedIn($bool) {
 		$this->setSessionVar('LoggedIn', $bool);
 	}
 	
-	function getLoginTimeStamp() {
+	public function getLoginTimeStamp() {
 		return $this->getSessionVar('LoginTimeStamp');
 	}
 
-	function setLoginTimeStamp($time) {
+	public function setLoginTimeStamp($time) {
 		$this->setSessionVar('LoginTimeStamp', $time);
 	}
 
-	function getChannelEnterTimeStamp() {
+	public function getChannelEnterTimeStamp() {
 		return $this->getSessionVar('ChannelEnterTimeStamp');
 	}
 
-	function setChannelEnterTimeStamp($time) {
+	public function setChannelEnterTimeStamp($time) {
 		$this->setSessionVar('ChannelEnterTimeStamp', $time);
 	}
 
-	function getStatusUpdateTimeStamp() {
+	public function getStatusUpdateTimeStamp() {
 		return $this->getSessionVar('StatusUpdateTimeStamp');
 	}
 
-	function setStatusUpdateTimeStamp($time) {
+	public function setStatusUpdateTimeStamp($time) {
 		$this->setSessionVar('StatusUpdateTimeStamp', $time);
 	}
 
-	function getInactiveCheckTimeStamp() {
+	public function getInactiveCheckTimeStamp() {
 		return $this->getSessionVar('InactiveCheckTimeStamp');
 	}
 
-	function setInactiveCheckTimeStamp($time) {
+	public function setInactiveCheckTimeStamp($time) {
 		$this->setSessionVar('InactiveCheckTimeStamp', $time);
 	}
 	
-	function getInsertedMessagesRate() {
+	public function getInsertedMessagesRate() {
 		return $this->getSessionVar('InsertedMessagesRate');
 	}
 	
-	function setInsertedMessagesRate($rate) {
+	public function setInsertedMessagesRate($rate) {
 		$this->setSessionVar('InsertedMessagesRate', $rate);
 	}
 
-	function getInsertedMessagesRateTimeStamp() {
+	public function getInsertedMessagesRateTimeStamp() {
 		return $this->getSessionVar('InsertedMessagesRateTimeStamp');
 	}
 
-	function setInsertedMessagesRateTimeStamp($time) {
+	public function setInsertedMessagesRateTimeStamp($time) {
 		$this->setSessionVar('InsertedMessagesRateTimeStamp', $time);
 	}
 
-	function getLangCode() {
+	public function getLangCode() {
 		// Get the langCode from request or cookie:
 		$langCodeCookie = isset($_COOKIE[$this->getConfig('sessionName').'_lang']) ? $_COOKIE[$this->getConfig('sessionName').'_lang'] : null;
 		$langCode = $this->getRequestVar('lang') ? $this->getRequestVar('lang') : $langCodeCookie;
@@ -2776,7 +2777,7 @@ class AJAXChat {
 		return $langCode;
 	}
 
-	function setLangCodeCookie() {
+	public function setLangCodeCookie() {
 		setcookie(
 			$this->getConfig('sessionName').'_lang',
 			$this->getLangCode(),
@@ -2787,32 +2788,32 @@ class AJAXChat {
 		);
 	}
 
-	function removeUnsafeCharacters($str) {
+	public function removeUnsafeCharacters($str) {
 		// Remove NO-WS-CTL, non-whitespace control characters (RFC 2822), decimal 1–8, 11–12, 14–31, and 127:
 		return AJAXChatEncoding::removeUnsafeCharacters($str);
 	}
 
-	function subString($str, $start=0, $length=null, $encoding='UTF-8') {
+	public function subString($str, $start=0, $length=null, $encoding='UTF-8') {
 		return AJAXChatString::subString($str, $start, $length, $encoding);
 	}
 	
-	function stringLength($str, $encoding='UTF-8') {
+	public function stringLength($str, $encoding='UTF-8') {
 		return AJAXChatString::stringLength($str, $encoding);
 	}
 
-	function trimMessageText($text) {
+	public function trimMessageText($text) {
 		return $this->trimString($text, 'UTF-8', $this->getConfig('messageTextMaxLength'));
 	}
 
-	function trimUserName($userName) {
+	public function trimUserName($userName) {
 		return $this->trimString($userName, null, $this->getConfig('userNameMaxLength'), true, true);
 	}
 	
-	function trimChannelName($channelName) {		
+	public function trimChannelName($channelName) {		
 		return $this->trimString($channelName, null, null, true, true);
 	}
 
-	function trimString($str, $sourceEncoding=null, $maxLength=null, $replaceWhitespace=false, $decodeEntities=false, $htmlEntitiesMap=null) {
+	public function trimString($str, $sourceEncoding=null, $maxLength=null, $replaceWhitespace=false, $decodeEntities=false, $htmlEntitiesMap=null) {
 		// Make sure the string contains valid unicode:
 		$str = $this->convertToUnicode($str, $sourceEncoding);
 		
@@ -2840,45 +2841,45 @@ class AJAXChat {
 		return $str;
 	}
 	
-	function convertToUnicode($str, $sourceEncoding=null) {
+	public function convertToUnicode($str, $sourceEncoding=null) {
 		if($sourceEncoding === null) {
 			$sourceEncoding = $this->getConfig('sourceEncoding');
 		}
 		return $this->convertEncoding($str, $sourceEncoding, 'UTF-8');
 	}
 	
-	function convertFromUnicode($str, $contentEncoding=null) {
+	public function convertFromUnicode($str, $contentEncoding=null) {
 		if($contentEncoding === null) {
 			$contentEncoding = $this->getConfig('contentEncoding');
 		}
 		return $this->convertEncoding($str, 'UTF-8', $contentEncoding);
 	}
 
-	function convertEncoding($str, $charsetFrom, $charsetTo) {
+	public function convertEncoding($str, $charsetFrom, $charsetTo) {
 		return AJAXChatEncoding::convertEncoding($str, $charsetFrom, $charsetTo);
 	}
 
-	function encodeEntities($str, $encoding='UTF-8', $convmap=null) {
+	public function encodeEntities($str, $encoding='UTF-8', $convmap=null) {
 		return AJAXChatEncoding::encodeEntities($str, $encoding, $convmap);
 	}
 
-	function decodeEntities($str, $encoding='UTF-8', $htmlEntitiesMap=null) {
+	public function decodeEntities($str, $encoding='UTF-8', $htmlEntitiesMap=null) {
 		return AJAXChatEncoding::decodeEntities($str, $encoding, $htmlEntitiesMap);
 	}
 	
-	function htmlEncode($str) {
+	public function htmlEncode($str) {
 		return AJAXChatEncoding::htmlEncode($str, $this->getConfig('contentEncoding'));
 	}
 	
-	function encodeSpecialChars($str) {
+	public function encodeSpecialChars($str) {
 		return AJAXChatEncoding::encodeSpecialChars($str);
 	}
 
-	function decodeSpecialChars($str) {
+	public function decodeSpecialChars($str) {
 		return AJAXChatEncoding::decodeSpecialChars($str);
 	}
 
-	function ipToStorageFormat($ip) {
+	public function ipToStorageFormat($ip) {
 		if(function_exists('inet_pton')) {
 			// ipv4 & ipv6:
 			return @inet_pton($ip);
@@ -2887,7 +2888,7 @@ class AJAXChat {
 		return @pack('N',@ip2long($ip));
 	}
 	
-	function ipFromStorageFormat($ip) {
+	public function ipFromStorageFormat($ip) {
 		if(function_exists('inet_ntop')) {
 			// ipv4 & ipv6:
 			return @inet_ntop($ip);
@@ -2900,14 +2901,14 @@ class AJAXChat {
 		return null;
 	}
 	
-	function getConfig($key, $subkey=null) {
+	public function getConfig($key, $subkey=null) {
 		if($subkey)
 			return $this->_config[$key][$subkey];
 		else
 			return $this->_config[$key];
 	}
 
-	function setConfig($key, $subkey, $value) {
+	public function setConfig($key, $subkey, $value) {
 		if($subkey) {
 			if(!isset($this->_config[$key])) {
 				$this->_config[$key] = array();
@@ -2918,7 +2919,7 @@ class AJAXChat {
 		}
 	}
 	
-	function getLang($key=null) {
+	public function getLang($key=null) {
 		if(!$this->_lang) {
 			// Include the language file:
 			$lang = null;
@@ -2932,7 +2933,7 @@ class AJAXChat {
 		return null;
 	}
 
-	function getChatURL() {
+	public function getChatURL() {
 		if(defined('AJAX_CHAT_URL')) {
 			return AJAX_CHAT_URL;
 		}
@@ -2945,7 +2946,7 @@ class AJAXChat {
 			substr($_SERVER['SCRIPT_NAME'],0, strrpos($_SERVER['SCRIPT_NAME'], '/')+1);
 	}
 
-	function getIDFromName($userName) {
+	public function getIDFromName($userName) {
 		$userDataArray = $this->getOnlineUsersData(null,'userName',$userName);
 		if($userDataArray && isset($userDataArray[0])) {
 			return $userDataArray[0]['userID'];
@@ -2953,7 +2954,7 @@ class AJAXChat {
 		return null;
 	}
 
-	function getNameFromID($userID) {
+	public function getNameFromID($userID) {
 		$userDataArray = $this->getOnlineUsersData(null,'userID',$userID);
 		if($userDataArray && isset($userDataArray[0])) {
 			return $userDataArray[0]['userName'];
@@ -2961,7 +2962,7 @@ class AJAXChat {
 		return null;
 	}
 
-	function getChannelFromID($userID) {
+	public function getChannelFromID($userID) {
 		$userDataArray = $this->getOnlineUsersData(null,'userID',$userID);
 		if($userDataArray && isset($userDataArray[0])) {
 			return $userDataArray[0]['channel'];
@@ -2969,7 +2970,7 @@ class AJAXChat {
 		return null;
 	}
 
-	function getIPFromID($userID) {
+	public function getIPFromID($userID) {
 		$userDataArray = $this->getOnlineUsersData(null,'userID',$userID);
 		if($userDataArray && isset($userDataArray[0])) {
 			return $userDataArray[0]['ip'];
@@ -2977,7 +2978,7 @@ class AJAXChat {
 		return null;
 	}
 	
-	function getRoleFromID($userID) {
+	public function getRoleFromID($userID) {
 		$userDataArray = $this->getOnlineUsersData(null,'userID',$userID);
 		if($userDataArray && isset($userDataArray[0])) {
 			return $userDataArray[0]['userRole'];
@@ -2985,11 +2986,11 @@ class AJAXChat {
 		return null;
 	}
 	
-	function getChannelNames() {
+	public function getChannelNames() {
 		return array_flip($this->getChannels());
 	}
 	
-	function getChannelIDFromChannelName($channelName) {
+	public function getChannelIDFromChannelName($channelName) {
 		if(!$channelName)
 			return null;
 		$channels = $this->getAllChannels();
@@ -3020,7 +3021,7 @@ class AJAXChat {
 		return $channelID;
 	}
 	
-	function getChannelNameFromChannelID($channelID) {
+	public function getChannelNameFromChannelID($channelID) {
 		foreach($this->getAllChannels() as $key=>$value) {
 			if($value == $channelID) {
 				return $key;
@@ -3037,39 +3038,39 @@ class AJAXChat {
 		return $this->getPrivateChannelName($userName);
 	}
 	
-	function getChannelName() {
+	public function getChannelName() {
 		return $this->getChannelNameFromChannelID($this->getChannel());
 	}
 
-	function getPrivateChannelName($userName=null) {
+	public function getPrivateChannelName($userName=null) {
 		if($userName === null) {
 			$userName = $this->getUserName();
 		}
 		return $this->getConfig('privateChannelPrefix').$userName.$this->getConfig('privateChannelSuffix');
 	}
 
-	function getPrivateChannelID($userID=null) {
+	public function getPrivateChannelID($userID=null) {
 		if($userID === null) {
 			$userID = $this->getUserID();
 		}
 		return $userID + $this->getConfig('privateChannelDiff');
 	}
 	
-	function getPrivateMessageID($userID=null) {
+	public function getPrivateMessageID($userID=null) {
 		if($userID === null) {
 			$userID = $this->getUserID();
 		}
 		return $userID + $this->getConfig('privateMessageDiff');
 	}
 
-	function isAllowedToSendPrivateMessage() {
+	public function isAllowedToSendPrivateMessage() {
 		if($this->getConfig('allowPrivateMessages') || $this->getUserRole() == AJAX_CHAT_ADMIN) {
 			return true;
 		}
 		return false;
 	}
 	
-	function isAllowedToCreatePrivateChannel() {
+	public function isAllowedToCreatePrivateChannel() {
 		if($this->getConfig('allowPrivateChannels')) {
 			switch($this->getUserRole()) {
 				case AJAX_CHAT_USER:
@@ -3085,7 +3086,7 @@ class AJAXChat {
 		return false;
 	}
 	
-	function isAllowedToListHiddenUsers() {
+	public function isAllowedToListHiddenUsers() {
 		// Hidden users are users within private or restricted channels:
 		switch($this->getUserRole()) {
 			case AJAX_CHAT_MODERATOR:
@@ -3097,7 +3098,7 @@ class AJAXChat {
 		}
 	}
 
-	function isUserOnline($userID=null) {
+	public function isUserOnline($userID=null) {
 		$userID = ($userID === null) ? $this->getUserID() : $userID;
 		$userDataArray = $this->getOnlineUsersData(null,'userID',$userID);
 		if($userDataArray && count($userDataArray) > 0) {
@@ -3106,7 +3107,7 @@ class AJAXChat {
 		return false;
 	}
 
-	function isUserNameInUse($userName=null) {
+	public function isUserNameInUse($userName=null) {
 		$userName = ($userName === null) ? $this->getUserName() : $userName;
 		$userDataArray = $this->getOnlineUsersData(null,'userName',$userName);
 		if($userDataArray && count($userDataArray) > 0) {
@@ -3115,7 +3116,7 @@ class AJAXChat {
 		return false;
 	}
 	
-	function isUserBanned($userName, $userID=null, $ip=null) {
+	public function isUserBanned($userName, $userID=null, $ip=null) {
 		if($userID !== null) {
 			$bannedUserDataArray = $this->getBannedUsersData('userID',$userID);
 			if($bannedUserDataArray && isset($bannedUserDataArray[0])) {
@@ -3135,14 +3136,14 @@ class AJAXChat {
 		return false;
 	}
 	
-	function isMaxUsersLoggedIn() {
+	public function isMaxUsersLoggedIn() {
 		if(count($this->getOnlineUsersData()) >= $this->getConfig('maxUsersLoggedIn')) {
 			return true;
 		}
 		return false;
 	}
 			
-	function validateChannel($channelID) {
+	public function validateChannel($channelID) {
 		if($channelID === null) {
 			return false;
 		}
@@ -3162,7 +3163,7 @@ class AJAXChat {
 		return false;
 	}
 	
-	function createGuestUserName() {
+	public function createGuestUserName() {
 		$maxLength =	$this->getConfig('userNameMaxLength')
 						- $this->stringLength($this->getConfig('guestUserPrefix'))
 						- $this->stringLength($this->getConfig('guestUserSuffix'));
@@ -3177,14 +3178,14 @@ class AJAXChat {
 	}
 	
 	// Guest userIDs must not interfere with existing userIDs and must be lower than privateChannelDiff:
-	function createGuestUserID() {
+	public function createGuestUserID() {
 		// seed with microseconds since last "whole" second:
 		mt_srand((double)microtime()*1000000);
 		
 		return mt_rand($this->getConfig('minGuestUserID'), $this->getConfig('privateChannelDiff')-1);
 	}
 
-	function getGuestUser() {
+	public function getGuestUser() {
 		if(!$this->getConfig('allowGuestLogins'))
 			return null;
 
@@ -3214,7 +3215,7 @@ class AJAXChat {
 		return $userData;		
 	}
 
-	function getCustomVar($key) {
+	public function getCustomVar($key) {
 		if(!isset($this->_customVars))
 			$this->_customVars = array();
 		if(!isset($this->_customVars[$key]))
@@ -3222,7 +3223,7 @@ class AJAXChat {
 		return $this->_customVars[$key];
 	}
 	
-	function setCustomVar($key, $value) {
+	public function setCustomVar($key, $value) {
 		if(!isset($this->_customVars))
 			$this->_customVars = array();
 		$this->_customVars[$key] = $value;
@@ -3230,66 +3231,66 @@ class AJAXChat {
 
 	// Override to replace custom template tags:
 	// Return the replacement for the given tag (and given tagContent)	
-	function replaceCustomTemplateTags($tag, $tagContent) {
+	public function replaceCustomTemplateTags($tag, $tagContent) {
 		return null;
 	}
 
 	// Override to initialize custom configuration settings:
-	function initCustomConfig() {
+	public function initCustomConfig() {
 	}
 
 	// Override to add custom request variables:
 	// Add values to the request variables array: $this->_requestVars['customVariable'] = null;
-	function initCustomRequestVars() {
+	public function initCustomRequestVars() {
 	}
 
 	// Override to add custom session code right after the session has been started:
-	function initCustomSession() {
+	public function initCustomSession() {
 	}
 
 	// Override, to parse custom info requests:
 	// $infoRequest contains the current info request
 	// Add info responses using the method addInfoMessage($info, $type)
-	function parseCustomInfoRequest($infoRequest) {
+	public function parseCustomInfoRequest($infoRequest) {
 	}
 
 	// Override to replace custom text:
 	// Return replaced text
 	// $text contains the whole message
-	function replaceCustomText(&$text) {
+	public function replaceCustomText(&$text) {
 		return $text;
 	}
 
 	// Override to add custom commands:
 	// Return true if a custom command has been successfully parsed, else false
 	// $text contains the whole message, $textParts the message split up as words array
-	function parseCustomCommands($text, $textParts) {
+	public function parseCustomCommands($text, $textParts) {
 		return false;
 	}
 
 	// Override to perform custom actions on new messages:
 	// Return true if message may be inserted, else false
 	// $text contains the whole message
-	function onNewMessage($text) {
+	public function onNewMessage($text) {
 		return true;
 	}
 
 	// Override to perform custom actions on new messages:
 	// Method to set the style cookie depending on user data
-	function setStyle() {
+	public function setStyle() {
 	}
 
 	// Override:
 	// Returns true if the userID of the logged in user is identical to the userID of the authentication system
 	// or the user is authenticated as guest in the chat and the authentication system
-	function revalidateUserID() {
+	public function revalidateUserID() {
 		return true;
 	}
 	
 	// Override:
 	// Returns an associative array containing userName, userID and userRole
 	// Returns null if login is invalid
-	function getValidLoginUserData() {
+	public function getValidLoginUserData() {
 		// Check if we have a valid registered user:
 		if(false) {
 			// Here is the place to check user authentication
@@ -3302,7 +3303,7 @@ class AJAXChat {
 	// Override:
 	// Store the channels the current user has access to
 	// Make sure channel names don't contain any whitespace
-	function &getChannels() {
+	public function &getChannels() {
 		if($this->_channels === null) {
 			$this->_channels = $this->getAllChannels();
 		}
@@ -3312,7 +3313,7 @@ class AJAXChat {
 	// Override:
 	// Store all existing channels
 	// Make sure channel names don't contain any whitespace
-	function &getAllChannels() {
+	public function &getAllChannels() {
 		if($this->_allChannels === null) {
 			$this->_allChannels = array();
 			
@@ -3323,4 +3324,3 @@ class AJAXChat {
 	}
 
 }
-?>

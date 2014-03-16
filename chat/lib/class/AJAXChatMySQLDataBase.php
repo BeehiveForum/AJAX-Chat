@@ -10,18 +10,18 @@
 // Class to initialize the MySQL DataBase connection:
 class AJAXChatDataBaseMySQL {
 
-	var $_connectionID;
-	var $_errno = 0;
-	var $_error = '';
-	var $_dbName;
+	protected $_connectionID;
+	protected $_errno = 0;
+	protected $_error = '';
+	protected $_dbName;
 
-	function __construct(&$dbConnectionConfig) {
+	public function __construct(&$dbConnectionConfig) {
 		$this->_connectionID = $dbConnectionConfig['link'];
 		$this->_dbName = $dbConnectionConfig['name'];
 	}
 	
 	// Method to connect to the DataBase server:
-	function connect(&$dbConnectionConfig) {
+	public function connect(&$dbConnectionConfig) {
 		$this->_connectionID = @mysql_connect(
 			$dbConnectionConfig['host'],
 			$dbConnectionConfig['user'],
@@ -37,7 +37,7 @@ class AJAXChatDataBaseMySQL {
 	}
 	
 	// Method to select the DataBase:
-	function select($dbName) {
+	public function select($dbName) {
 		if(!@mysql_select_db($dbName, $this->_connectionID)) {
 			$this->_errno = mysql_errno($this->_connectionID);
 			$this->_error = mysql_error($this->_connectionID);
@@ -48,12 +48,12 @@ class AJAXChatDataBaseMySQL {
 	}
 	
 	// Method to determine if an error has occured:
-	function error() {
+	public function error() {
 		return (bool)$this->_error;
 	}
 	
 	// Method to return the error report:
-	function getError() {
+	public function getError() {
 		if($this->error()) {
 			$str = 'Error-Report: '	.$this->_error."\n";
 			$str .= 'Error-Code: '.$this->_errno."\n";
@@ -64,29 +64,28 @@ class AJAXChatDataBaseMySQL {
 	}
 	
 	// Method to return the connection identifier:
-	function &getConnectionID() {
+	public function &getConnectionID() {
 		return $this->_connectionID;
 	}
 	
 	// Method to prevent SQL injections:
-	function makeSafe($value) {
+	public function makeSafe($value) {
 		return "'".mysql_real_escape_string($value, $this->_connectionID)."'";
 	}
 	
 	// Method to perform SQL queries:
-	function sqlQuery($sql) {
+	public function sqlQuery($sql) {
 		return new AJAXChatMySQLQuery($sql, $this->_connectionID);
 	}
 
 	// Method to retrieve the current DataBase name:
-	function getName() {
+	public function getName() {
 		return $this->_dbName;
 	}
 
 	// Method to retrieve the last inserted ID:
-	function getLastInsertedID() {
+	public function getLastInsertedID() {
 		return mysql_insert_id($this->_connectionID);
 	}
 
 }
-?>

@@ -10,36 +10,36 @@
 // Class to handle HTML templates
 class AJAXChatTemplate {
 
-	var $ajaxChat;
-	var $_regExpTemplateTags;
-	var $_templateFile;
-	var $_contentType;
-	var $_content;
-	var $_parsedContent;
+	public $ajaxChat;
+	protected $_regExpTemplateTags;
+	protected $_templateFile;
+	protected $_contentType;
+	protected $_content;
+	protected $_parsedContent;
 
 	// Constructor:
-	function __construct(&$ajaxChat, $templateFile, $contentType=null) {
+	public function __construct(&$ajaxChat, $templateFile, $contentType=null) {
 		$this->ajaxChat = $ajaxChat;
 		$this->_regExpTemplateTags = '/\[(\w+?)(?:(?:\/)|(?:\](.+?)\[\/\1))\]/s';		
 		$this->_templateFile = $templateFile;
 		$this->_contentType = $contentType;
 	}
 
-	function getParsedContent() {
+	public function getParsedContent() {
 		if(!$this->_parsedContent) {
 			$this->parseContent();
 		}
 		return $this->_parsedContent;
 	}
 
-	function getContent() {
+	public function getContent() {
 		if(!$this->_content) {
 			$this->_content = AJAXChatFileSystem::getFileContents($this->_templateFile);
 		}
 		return $this->_content;
 	}
 
-	function parseContent() {
+	public function parseContent() {
 		$this->_parsedContent = $this->getContent();
 		
 		// Remove the XML declaration if the content-type is not xml:		
@@ -55,7 +55,7 @@ class AJAXChatTemplate {
 		$this->_parsedContent = preg_replace_callback($this->_regExpTemplateTags, array($this, 'replaceTemplateTags'), $this->_parsedContent);
 	}
 
-	function replaceTemplateTags($tagData) {
+	public function replaceTemplateTags($tagData) {
 		switch($tagData[1]) {
 			case 'AJAX_CHAT_URL':
 				return $this->ajaxChat->htmlEncode($this->ajaxChat->getChatURL());
@@ -179,7 +179,7 @@ class AJAXChatTemplate {
 	}
 
 	// Function to display alternating table row colors:
-	function alternateRow($rowOdd='rowOdd', $rowEven='rowEven') {
+	public function alternateRow($rowOdd='rowOdd', $rowEven='rowEven') {
 		static $i;
 		$i += 1;
 		if($i % 2 == 0) {
@@ -189,7 +189,7 @@ class AJAXChatTemplate {
 		}
 	}
 
-	function getBaseDirectionAttribute() {
+	public function getBaseDirectionAttribute() {
 		$langCodeParts = explode('-', $this->ajaxChat->getLangCode());
 		switch($langCodeParts[0]) {
 			case 'ar':
@@ -201,7 +201,7 @@ class AJAXChatTemplate {
 		}
 	}
 
-	function getStyleSheetLinkTags() {
+	public function getStyleSheetLinkTags() {
 		$styleSheets = '';
 		foreach($this->ajaxChat->getConfig('styleAvailable') as $style) {
 			$alternate = ($style == $this->ajaxChat->getConfig('styleDefault')) ? '' : 'alternate ';
@@ -210,7 +210,7 @@ class AJAXChatTemplate {
 		return $styleSheets;
 	}
 
-	function getChannelOptionTags() {
+	public function getChannelOptionTags() {
 		$channelOptions = '';
 		$channelSelected = false;
 		foreach($this->ajaxChat->getChannels() as $name=>$id) {
@@ -248,7 +248,7 @@ class AJAXChatTemplate {
 		return $channelOptions;
 	}
 
-	function getStyleOptionTags() {
+	public function getStyleOptionTags() {
 		$styleOptions = '';
 		foreach($this->ajaxChat->getConfig('styleAvailable') as $style) {
 			$selected = ($style == $this->ajaxChat->getConfig('styleDefault')) ? ' selected="selected"' : '';
@@ -257,7 +257,7 @@ class AJAXChatTemplate {
 		return $styleOptions;
 	}
 
-	function getLanguageOptionTags() {
+	public function getLanguageOptionTags() {
 		$languageOptions = '';
 		$languageNames = $this->ajaxChat->getConfig('langNames');
 		foreach($this->ajaxChat->getConfig('langAvailable') as $langCode) {
@@ -267,7 +267,7 @@ class AJAXChatTemplate {
 		return $languageOptions;
 	}
 
-	function getErrorMessageTags() {
+	public function getErrorMessageTags() {
 		$errorMessages = '';
 		foreach($this->ajaxChat->getInfoMessages('error') as $error) {
 			$errorMessages .= '<div>'.$this->ajaxChat->htmlEncode($this->ajaxChat->getLang($error)).'</div>';
@@ -275,7 +275,7 @@ class AJAXChatTemplate {
 		return $errorMessages;
 	}
 
-	function getLogsChannelOptionTags() {
+	public function getLogsChannelOptionTags() {
 		$channelOptions = '';
 		$channelOptions .= '<option value="-3">------</option>';
 		foreach($this->ajaxChat->getChannels() as $key=>$value) {
@@ -289,7 +289,7 @@ class AJAXChatTemplate {
 		return $channelOptions;
 	}
 
-	function getLogsYearOptionTags() {
+	public function getLogsYearOptionTags() {
 		$yearOptions = '';
 		$yearOptions .= '<option value="-1">----</option>';
 		for($year=date('Y'); $year>=$this->ajaxChat->getConfig('logsFirstYear'); $year--) {
@@ -298,7 +298,7 @@ class AJAXChatTemplate {
 		return $yearOptions;
 	}
 	
-	function getLogsMonthOptionTags() {
+	public function getLogsMonthOptionTags() {
 		$monthOptions = '';
 		$monthOptions .= '<option value="-1">--</option>';
 		for($month=1; $month<=12; $month++) {
@@ -307,7 +307,7 @@ class AJAXChatTemplate {
 		return $monthOptions;
 	}
 	
-	function getLogsDayOptionTags() {
+	public function getLogsDayOptionTags() {
 		$dayOptions = '';
 		$dayOptions .= '<option value="-1">--</option>';
 		for($day=1; $day<=31; $day++) {
@@ -316,7 +316,7 @@ class AJAXChatTemplate {
 		return $dayOptions;
 	}
 	
-	function getLogsHourOptionTags() {
+	public function getLogsHourOptionTags() {
 		$hourOptions = '';
 		$hourOptions .= '<option value="-1">-----</option>';
 		for($hour=0; $hour<=23; $hour++) {
@@ -326,4 +326,3 @@ class AJAXChatTemplate {
 	}
 
 }
-?>

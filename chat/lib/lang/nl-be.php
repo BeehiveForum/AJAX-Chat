@@ -122,4 +122,3 @@ $lang['logsTime'] = 'Tijd';
 $lang['logsSearch'] = 'Zoek';
 $lang['logsPrivateChannels'] = 'Privékanalen';
 $lang['logsPrivateMessages'] = 'Privéberichten';
-?>

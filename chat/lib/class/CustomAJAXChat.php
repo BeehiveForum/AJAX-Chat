@@ -57,7 +57,7 @@ class CustomAJAXChat extends AJAXChat
                 if (session::logged_in()) {
                     return ($this->getRequestVar('view') == 'logs') ? './?view=logs' : './';
                 } else {
-                    return "../logon.php";
+                    return BH_FORUM_PATH. 'logon.php';
                 }
 
             case 'REDIRECT_URL':

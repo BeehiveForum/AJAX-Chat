@@ -22,18 +22,18 @@ USA
 ======================================================================*/
 
 // Constant to define where the Beehive Forum include files are on the server
-define("BH_INCLUDE_PATH", __DIR__. "/../../../BeehiveForum/forum/include/");
+define('BH_INCLUDE_PATH', __DIR__ . '/../../../BeehiveForum/forum/include/');
 
 // Constant to define where Beehive is relative to the current HTTP request
-define("BH_FORUM_PATH", "../");
+define('BH_FORUM_PATH', '../');
 
 // Beehive Forum bootstrap
-require_once __DIR__. '/../../../BeehiveForum/forum/boot.php';
+require_once __DIR__ . '/../../../BeehiveForum/forum/boot.php';
 
 // Get forum WEBTAG
 $webtag = get_webtag();
 
 // Check AJAX chat functionality is enabled.
 if (forum_get_global_setting('ajax_chat_enabled', 'N')) {
-    header_redirect("../index.php?webtag=$webtag");
+    header_redirect(BH_FORUM_PATH . 'index.php?webtag=$webtag');
 }

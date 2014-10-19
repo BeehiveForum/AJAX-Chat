@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * @package AJAX_Chat
  * @author Sebastian Tschan
@@ -33,6 +33,7 @@ $lang['bbCodeLabelCode'] = 'კოდი';
 $lang['bbCodeLabelURL'] = 'URL';
 $lang['bbCodeLabelImg'] = 'სურათი';
 $lang['bbCodeLabelColor'] = 'შრიფტის ფერი';
+$lang['bbCodeLabelEmoticon'] = 'Smilies';
 $lang['bbCodeTitleBold'] = 'მსხვილი ტექსტი: [b]ტექსტი[/b]';
 $lang['bbCodeTitleItalic'] = 'დახრილი ტექსტი: [i]ტექსტი[/i]';
 $lang['bbCodeTitleUnderline'] = 'ხაზგასმული ტექსტი: [u]ტექსტი[/u]';
@@ -41,6 +42,7 @@ $lang['bbCodeTitleCode'] = 'კოდის ჩვენება: [code]კო�
 $lang['bbCodeTitleURL'] = 'URL ბმულის ჩასმა: [url]http://example.org[/url] ან [url=http://example.org]ტექსტი[/url]';
 $lang['bbCodeTitleImg'] = 'ნახატის ჩასმა: [img]http://example.org/image.jpg[/img]';
 $lang['bbCodeTitleColor'] = 'შრიფტის ფერი: [color=red]ტექსტი[/color]';
+$lang['bbCodeTitleEmoticon'] = 'Smilies list';
 $lang['help'] = 'დახმარება';
 $lang['helpItemDescJoin'] = 'შეუერთდი არხს:';
 $lang['helpItemCodeJoin'] = '/join არხის_სახელი';

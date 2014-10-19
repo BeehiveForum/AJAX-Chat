@@ -33,7 +33,13 @@ require_once __DIR__ . '/../../../BeehiveForum/forum/boot.php';
 // Get forum WEBTAG
 $webtag = get_webtag();
 
+// Check we have a webtag and have access to the specified forum
+if (!forum_check_webtag_available($webtag, false) || !forum_check_access_level()) {
+    $request_uri = rawurlencode(get_request_uri(false));
+    header_redirect(BH_FORUM_PATH . "index.php?final_uri=forums.php%3Fwebtag_error%3D$webtag%26final_uri%3D$request_uri");
+}
+
 // Check AJAX chat functionality is enabled.
 if (forum_get_global_setting('ajax_chat_enabled', 'N')) {
-    header_redirect(BH_FORUM_PATH . 'index.php?webtag=$webtag');
+    header_redirect(BH_FORUM_PATH . "index.php?webtag=$webtag");
 }

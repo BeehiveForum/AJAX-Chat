@@ -151,7 +151,7 @@ class CustomAJAXChat extends AJAXChat
 
                     if (($row['ACCESS_LEVEL'] == FORUM_PASSWD_PROTECTED)) {
 
-                        if ($_SESSION["{$row['WEBTAG']}_PASSWORD"] == $row['FORUM_PASSWD']) {
+                        if (isset($_SESSION["{$row['WEBTAG']}_PASSWORD"]) && ($_SESSION["{$row['WEBTAG']}_PASSWORD"] == $row['FORUM_PASSWD'])) {
                             $this->_channels[$forum_name] = $row['FID'];
                         }
 

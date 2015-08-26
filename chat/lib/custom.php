@@ -27,6 +27,9 @@ define('BH_INCLUDE_PATH', __DIR__ . '/../../../BeehiveForum/forum/include/');
 // Constant to define where Beehive is relative to the current HTTP request
 define('BH_FORUM_PATH', '../');
 
+// Disable Beehive's CSRF check for AJAX-Chat
+define('BH_DISABLE_CSRF', true);
+
 // Beehive Forum bootstrap
 require_once __DIR__ . '/../../../BeehiveForum/forum/boot.php';
 
